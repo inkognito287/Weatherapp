@@ -1,8 +1,10 @@
 package com.example.wea
 
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,141 +12,73 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.time.LocalDateTime
+import java.time.Period
+import java.util.*
 
 
-class kek: AppCompatActivity() {
-    companion object {}
-
-    init {
-
-
-    }
-
-
+class kek : AppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.card_layout)
-
-
-
+        setContentView(R.layout.activity_sec)
+        val intent = getIntent()
+        val details = intent.getStringArrayExtra("details")
+        val titles = intent.getStringArrayExtra("titles")
+        val images = intent.getIntArrayExtra("images")
+        var k = 4
+        val recyclerView: RecyclerView = findViewById(R.id.recyclerView1)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = CustomRecyclerAdapter(details, titles, images)
     }
-}
-
-    class RecyclerAdapter(details1:Array<String>, titles1:Array<String>, images1: IntArray) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
-        val details: Array<String>
-        val titles: Array<String>
-        val images: IntArray
-        init{
-            images=images1
-            titles=titles1
-            details = details1
-        }
-        val da = kek()
-
-        val name2 = "erere"
-
-
-
-
-
-
-
-        //kek().na
-        // finish()
-        private var nedelia = arrayOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
-        private var nedeliarus = arrayOf("Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница","Суббота")
-
-        @RequiresApi(Build.VERSION_CODES.O)
-        val current = LocalDateTime.now()
-
-
-        @RequiresApi(Build.VERSION_CODES.O)
-        val formatter = DateTimeFormatter.ofPattern("EEEE")
-        var DENnedeli = arrayOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
-
-        var text3 = arrayOf("", "", "", "", "", "")
-
-
-
-        @RequiresApi(Build.VERSION_CODES.O)
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerAdapter.ViewHolder {
-            val v = LayoutInflater.from(parent.context).inflate(R.layout.card_layout, parent, false)
-            return ViewHolder(v)
-            //TODO("Not yet implemented")
-
-        }
-
-        override fun getItemCount(): Int {
-            return titles.size
-            //TODO("Not yet implemented")
-
-        }
-
-        @RequiresApi(Build.VERSION_CODES.O)
-        override fun onBindViewHolder(holder: RecyclerAdapter.ViewHolder, position: Int) {
-
-
-
-
-
-            val ogo: kek = kek()
-
-            val name: String
-
-
-            holder.itemTitle.text = titles[position]
-
-            holder.itemDetail.text = details[position]
-
-
-
-            holder.itemImage.setImageResource(images[position])//TODO("Not yet implemented")
-            try {
-
-
-                for (i in 0..6)
-                    if (nedelia[i] == current.format(formatter)) {
-                        DENnedeli[0] = nedeliarus[i + 1]
-                        DENnedeli[1] = nedeliarus[i + 2]
-                        DENnedeli[2] = nedeliarus[i + 3]
-                        DENnedeli[3] = nedeliarus[i + 4]
-                        DENnedeli[4] = nedeliarus[i + 5]
-                        DENnedeli[5] = nedeliarus[i + 6]
-                        holder.itemtext3.text = DENnedeli[position]
-                        break
-                    }
-
-
-            } catch (v: Exception) {
-
-            }
-
-        }
-
-
-        @RequiresApi(Build.VERSION_CODES.O)
-        inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-            var itemImage: ImageView
-            var itemTitle: TextView
-            var itemDetail: TextView
-            var itemtext3: TextView
-
+    private fun fillList(): List<String> {
+        val data = mutableListOf<String>()
+        (0..30).forEach { i -> data.add("$i element") }
+        return data
+    }
+    class CustomRecyclerAdapter(private val names: Array<String>,
+                                private val names2: Array<String>,
+                                private val names3: IntArray?) :
+            RecyclerView.Adapter<CustomRecyclerAdapter.MyViewHolder>() {
+        val ogo = Date()
+        val calendarik = Calendar.getInstance()
+        val format1 = SimpleDateFormat("EEEE")
+        class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+            var largeTextView: TextView? = null
+            var smallTextView: TextView? = null
+            var Imageweather: ImageView? = null
+            var dayofnedelia: TextView? = null
 
             init {
-                itemImage = itemView.findViewById(R.id.item_image)
-                itemTitle = itemView.findViewById(R.id.item_title)
-                itemDetail = itemView.findViewById(R.id.item_detail)
-                itemtext3 = itemView.findViewById(R.id.textView3)
-
-
-
+                largeTextView = itemView.findViewById(R.id.textViewLarge)
+                smallTextView = itemView.findViewById(R.id.textViewSmall)
+                Imageweather = itemView.findViewById(R.id.imageView2)
+                dayofnedelia = itemView.findViewById(R.id.dayofnedelia)
             }
         }
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+            val itemView =
+                    LayoutInflater.from(parent.context)
+                            .inflate(R.layout.recycleritem, parent, false)
+            return MyViewHolder(itemView)
+            // TODO("Not yet implemented")
+        }
+        override fun getItemCount(): Int {
+            return names.size
+            //TODO("Not yet implemented")
+        }
+        override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+
+            holder.largeTextView?.text = "%.1f".format(names.get(position).toFloat())+"°c"
+            holder.smallTextView?.text = "%.1f".format(names2.get(position).toFloat())+"°c"
+            holder.Imageweather?.setImageResource(names3?.get(position)!!)
+            calendarik.setTime(ogo)
+            calendarik.add(Calendar.DAY_OF_WEEK, position + 1)
+            holder.dayofnedelia?.text = format1.format(calendarik.getTime()).toString()
+            // TODO("Not yet implemented")
+        }
     }
-
-
-
+}
