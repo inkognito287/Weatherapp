@@ -1,7 +1,9 @@
 package com.example.wea
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.opengl.Visibility
@@ -13,6 +15,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -44,7 +47,7 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
     var titles = arrayOfNulls<String>(6)
     var details = arrayOfNulls<String>(6)
     var images = intArrayOf(1, 2, 3, 4, 5, 6)
-    var heplmassiv = arrayOf("er", "", "", "", "", "")
+    var heplmassiv = arrayOfNulls<String>(6)
     lateinit var gestureDetector: GestureDetector
     var x2: Float = 0.0f
     var x1: Float = 0.0f
@@ -168,7 +171,17 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
 
     inner class weatherTask() : AsyncTask<String, Void, String>() {
         override fun onPreExecute() {
-
+            if (ActivityCompat.checkSelfPermission(
+                            this@MainActivity,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                            this@MainActivity,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED
+            ){
+                val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION)
+                ActivityCompat.requestPermissions(this@MainActivity, permissions,0)
+            }
             super.onPreExecute()
             findViewById<ProgressBar>(R.id.Loader).visibility = View.VISIBLE
             relativeLayout2.visibility = View.GONE
