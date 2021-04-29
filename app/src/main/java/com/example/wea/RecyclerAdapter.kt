@@ -34,18 +34,23 @@ class kek : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = CustomRecyclerAdapter(details, titles, images)
     }
+
     private fun fillList(): List<String> {
         val data = mutableListOf<String>()
         (0..30).forEach { i -> data.add("$i element") }
         return data
     }
-    class CustomRecyclerAdapter(private val names: Array<String>,
-                                private val names2: Array<String>,
-                                private val names3: IntArray?) :
-            RecyclerView.Adapter<CustomRecyclerAdapter.MyViewHolder>() {
+
+    class CustomRecyclerAdapter(
+        private val names: Array<String>,
+        private val names2: Array<String>,
+        private val names3: IntArray?
+    ) :
+        RecyclerView.Adapter<CustomRecyclerAdapter.MyViewHolder>() {
         val ogo = Date()
         val calendarik = Calendar.getInstance()
         val format1 = SimpleDateFormat("EEEE")
+
         class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             var largeTextView: TextView? = null
             var smallTextView: TextView? = null
@@ -59,21 +64,24 @@ class kek : AppCompatActivity() {
                 dayofnedelia = itemView.findViewById(R.id.dayofnedelia)
             }
         }
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
             val itemView =
-                    LayoutInflater.from(parent.context)
-                            .inflate(R.layout.recycleritem, parent, false)
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.recycleritem, parent, false)
             return MyViewHolder(itemView)
             // TODO("Not yet implemented")
         }
+
         override fun getItemCount(): Int {
             return names.size
             //TODO("Not yet implemented")
         }
+
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
-            holder.largeTextView?.text = "%.1f".format(names.get(position).toFloat())+"°c"
-            holder.smallTextView?.text = "%.1f".format(names2.get(position).toFloat())+"°c"
+            holder.largeTextView?.text = "%.1f".format(names.get(position).toFloat()) + "°c"
+            holder.smallTextView?.text = "%.1f".format(names2.get(position).toFloat()) + "°c"
             holder.Imageweather?.setImageResource(names3?.get(position)!!)
             calendarik.setTime(ogo)
             calendarik.add(Calendar.DAY_OF_WEEK, position + 1)
