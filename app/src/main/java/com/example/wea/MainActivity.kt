@@ -2,6 +2,7 @@ package com.example.wea
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -33,12 +34,10 @@ import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, View.OnClickListener {
-    var locationManager: LocationManager? = null
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
     val API: String = "19980e00b25d8dd054c9cbf6233c0fb2" // Use API key
     var city: String = storage.citty
     var k: Int = 0
-    var kek: String = "erer"
-    lateinit var myArray: kotlin.Array<String>
     lateinit var latitude: String
     lateinit var longitude: String
     lateinit var cities: EditText
@@ -47,7 +46,7 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
     var titles = arrayOfNulls<String>(6)
     var details = arrayOfNulls<String>(6)
     var images = intArrayOf(1, 2, 3, 4, 5, 6)
-    var heplmassiv = arrayOfNulls<String>(6)
+    var heplmassiv = arrayOf("er", "", "", "", "", "")
     lateinit var gestureDetector: GestureDetector
     var x2: Float = 0.0f
     var x1: Float = 0.0f
@@ -56,15 +55,19 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
     var temperatura: String = "metric"
     var multiply: Boolean = storage.multiply
     private var layoutManager: RecyclerView.LayoutManager? = null
+    private var hasGps = false
+    private var hasNetwork = false
 
     companion object {
         const val MIN_DISTANCE = 150
     }
 
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        getLastLocation()
         relativeLayout2.visibility = View.GONE
         Daytoday.visibility = View.INVISIBLE
         findViewById<ImageView>(R.id.imageView).visibility = View.INVISIBLE
@@ -76,12 +79,18 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
         button.setOnClickListener(this)
         Daytodaybutton.setOnClickListener(this)
         gestureDetector = GestureDetector(this, this)
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        getLastLocation()
+
+
+
         layoutManager = LinearLayoutManager(this)
         weatherTask().execute()
+
         switch1.setOnClickListener(View.OnClickListener {
+
             multiply = false
+            if (switch1.isChecked)
+                findViewById<EditText>(R.id.cities).isEnabled = false
+            else cities.isEnabled = true
             weatherTask().execute()
         })
     }
@@ -136,6 +145,7 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
         return super.onTouchEvent(event)
     }
 
+
     @SuppressLint("MissingPermission")
     private fun getLastLocation() {
         fusedLocationClient.lastLocation
@@ -171,18 +181,24 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
 
     inner class weatherTask() : AsyncTask<String, Void, String>() {
         override fun onPreExecute() {
+
             if (ActivityCompat.checkSelfPermission(
-                            this@MainActivity,
-                            Manifest.permission.ACCESS_FINE_LOCATION
-                    ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                            this@MainActivity,
-                            Manifest.permission.ACCESS_COARSE_LOCATION
-                    ) != PackageManager.PERMISSION_GRANTED
-            ){
-                val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION)
-                ActivityCompat.requestPermissions(this@MainActivity, permissions,0)
+                    this@MainActivity,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                    this@MainActivity,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                val permissions = arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+                ActivityCompat.requestPermissions(this@MainActivity, permissions, 0)
             }
+
             super.onPreExecute()
+
             findViewById<ProgressBar>(R.id.Loader).visibility = View.VISIBLE
             relativeLayout2.visibility = View.GONE
             imageView.visibility = View.GONE
@@ -197,6 +213,7 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
         }
 
         override fun doInBackground(vararg params: String?): String? {
+
             if (multiply)
                 Loader.visibility = View.GONE
 
@@ -208,7 +225,9 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
                     if (switch1.isChecked == false)
                         response = response1(response, city)
                     if (switch1.isChecked == true) {
-                        metodlonglat()
+                       response= URL("https://www.google.by/maps/").readText(
+                            Charsets.UTF_8)
+                        getLastLocation()
                         response = response2(response, city)
                     }
                 }
@@ -229,6 +248,7 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
         }
 
         override fun onPostExecute(result: String?) {
+
             k = 0
             Handler().postDelayed({
                 relativeLayout2.visibility = View.VISIBLE
@@ -296,10 +316,13 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
     }
 
     fun response2(response2: String?, city: String): String {
-        var response2 =
-            URL("https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&units=$temperatura&appid=19980e00b25d8dd054c9cbf6233c0fb2&lang=ru").readText(
-                Charsets.UTF_8
-            )
+        var response2 = ""
+        while (response2 == "") {
+            response2 =
+                URL("https://api.openweathermap.org/data/2.5/weather?lat=${storage.latitude}&lon=${storage.longitude}&units=$temperatura&appid=19980e00b25d8dd054c9cbf6233c0fb2&lang=ru").readText(
+                    Charsets.UTF_8
+                )
+        }
         return response2
     }
 
@@ -341,8 +364,10 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
             var temp2 = data2.daily!![i]?.weather?.get(0)!!.icon
             heplmassiv[i] = temp2.toString()
             for (x in icons.values())
-                if ("ic_" + heplmassiv[i] == x.name)
+                if ("ic_" + heplmassiv[i] == x.name) {
                     images[i] = x.ok
+                    continue
+                }
         }
         return images
     }

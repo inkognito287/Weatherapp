@@ -33,7 +33,7 @@
                 android:layout_marginBottom="200dp"
                 android:fontFamily="@font/adamina"
                 android:text="20.23C"
-                android:textSize="80dp"
+                android:textSize="60dp"
                 app:layout_constraintBottom_toBottomOf="@+id/constraintLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -152,12 +152,12 @@
 
         <EditText
             android:id="@+id/cities"
-            android:layout_width="wrap_content"
+            android:layout_width="179dp"
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
             android:paddingLeft="10dp"
-            android:text="polatsk" />
+            android:text="london" />
 
     </RelativeLayout>
 
@@ -235,7 +235,7 @@
 
                     <Button
                         android:id="@+id/button"
-                        android:layout_width="200dp"
+                        android:layout_width="170dp"
                         android:layout_height="60dp"
                         android:layout_marginStart="10dp"
                         android:layout_marginLeft="10dp"
@@ -247,18 +247,20 @@
 
                     <ImageView
                         android:id="@+id/imageView"
-                        android:layout_width="190dp"
-                        android:layout_height="182dp"
+                        android:layout_width="163dp"
+                        android:layout_height="148dp"
+                        android:layout_marginTop="8dp"
                         android:src="@drawable/sun"
                         app:barrierAllowsGoneWidgets="false"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/button"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:visibility="visible" />
 
                     <Button
                         android:id="@+id/Daytoday"
-                        android:layout_width="200dp"
-                        android:layout_height="60dp"
+                        android:layout_width="167dp"
+                        android:layout_height="54dp"
                         android:layout_marginStart="10dp"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="15dp"

@@ -14,6 +14,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 import java.time.LocalDateTime
@@ -66,6 +67,7 @@ class kek : AppCompatActivity() {
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+
             val itemView =
                 LayoutInflater.from(parent.context)
                     .inflate(R.layout.recycleritem, parent, false)
@@ -79,13 +81,17 @@ class kek : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+//"%.1f".format(names.get(position).toFloat()) + "°c"
+            try {
+                holder.largeTextView?.text = "%.1f".format(names.get(position).toFloat()) + "°c"
+                holder.smallTextView?.text = "%.1f".format(names2.get(position).toFloat()) + "°c"
+                holder.Imageweather?.setImageResource(names3?.get(position)!!)
+                calendarik.setTime(ogo)
+                calendarik.add(Calendar.DAY_OF_WEEK, position + 1)
+                holder.dayofnedelia?.text = format1.format(calendarik.getTime()).toString()
+            } catch (e: Exception) {
 
-            holder.largeTextView?.text = "%.1f".format(names.get(position).toFloat()) + "°c"
-            holder.smallTextView?.text = "%.1f".format(names2.get(position).toFloat()) + "°c"
-            holder.Imageweather?.setImageResource(names3?.get(position)!!)
-            calendarik.setTime(ogo)
-            calendarik.add(Calendar.DAY_OF_WEEK, position + 1)
-            holder.dayofnedelia?.text = format1.format(calendarik.getTime()).toString()
+            }
             // TODO("Not yet implemented")
         }
     }

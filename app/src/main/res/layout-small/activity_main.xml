@@ -155,7 +155,7 @@
             android:ems="10"
             android:inputType="textPersonName"
             android:paddingLeft="10dp"
-            android:text="polatsk" />
+            android:text="london" />
 
     </RelativeLayout>
 
