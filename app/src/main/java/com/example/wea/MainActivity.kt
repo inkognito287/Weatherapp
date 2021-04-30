@@ -108,6 +108,7 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
 
     override fun onClick(view: View?) {
         if (view == this.button) {
+            switch1.isEnabled=false
             multiply = false
             city = cities.text.toString()
             storage.citty = city
