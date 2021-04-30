@@ -43,11 +43,11 @@ class kek : AppCompatActivity() {
     }
 
     class CustomRecyclerAdapter(
-        private val names: Array<String>,
-        private val names2: Array<String>,
-        private val names3: IntArray?
+            private val names: Array<String>,
+            private val names2: Array<String>,
+            private val names3: IntArray?
     ) :
-        RecyclerView.Adapter<CustomRecyclerAdapter.MyViewHolder>() {
+            RecyclerView.Adapter<CustomRecyclerAdapter.MyViewHolder>() {
         val ogo = Date()
         val calendarik = Calendar.getInstance()
         val format1 = SimpleDateFormat("EEEE")
@@ -69,8 +69,8 @@ class kek : AppCompatActivity() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
 
             val itemView =
-                LayoutInflater.from(parent.context)
-                    .inflate(R.layout.recycleritem, parent, false)
+                    LayoutInflater.from(parent.context)
+                            .inflate(R.layout.recycleritem, parent, false)
             return MyViewHolder(itemView)
             // TODO("Not yet implemented")
         }

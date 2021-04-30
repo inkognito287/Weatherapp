@@ -7,10 +7,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
-import android.opengl.Visibility
 import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
@@ -19,18 +19,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.location.*
+import com.google.gson.Gson
+import jsonresponce.Response
+import jsonresponce.Response2
 import kotlinx.android.synthetic.main.activity_main.*
-import org.json.JSONObject
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.abs
-import com.google.gson.Gson
-import jsonresponce.Response
-import jsonresponce.Response2
-import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, View.OnClickListener {
@@ -57,15 +55,26 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
     private var layoutManager: RecyclerView.LayoutManager? = null
     private var hasGps = false
     private var hasNetwork = false
+    private val mGoogleApiClient: GoogleApiClient? = null
+    lateinit var mLastLocation: Location
 
     companion object {
         const val MIN_DISTANCE = 150
     }
 
+    private var mFusedLocationProviderClient: FusedLocationProviderClient? = null
+    private val INTERVAL: Long = 2000
+    private val FASTEST_INTERVAL: Long = 1000
+    internal lateinit var mLocationRequest: LocationRequest
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        mLocationRequest = LocationRequest()
+        startLocationUpdates()
+        //stoplocationUpdates()
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        switch1.isEnabled = false
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         getLastLocation()
         relativeLayout2.visibility = View.GONE
@@ -86,11 +95,13 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
         weatherTask().execute()
 
         switch1.setOnClickListener(View.OnClickListener {
-
+            switch1.isEnabled = false
             multiply = false
-            if (switch1.isChecked)
+            if (switch1.isChecked) {
                 findViewById<EditText>(R.id.cities).isEnabled = false
-            else cities.isEnabled = true
+
+            } else cities.isEnabled = true
+            getLastLocation()
             weatherTask().execute()
         })
     }
@@ -145,16 +156,73 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
         return super.onTouchEvent(event)
     }
 
+    private fun isLocationEnabled(): Boolean {
+        var locationManager: LocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+    }
+
 
     @SuppressLint("MissingPermission")
     private fun getLastLocation() {
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location: Location? ->
-                this.latitude = location?.latitude.toString()
-                this.longitude = location?.longitude.toString()
-                storage.latitude = this.latitude
-                storage.longitude = this.longitude
-            }
+
+        val client = LocationServices.getFusedLocationProviderClient(this)
+        client.lastLocation.addOnSuccessListener { location: Location? ->
+            this.latitude = location?.latitude.toString()
+            this.longitude = location?.longitude.toString()
+            storage.latitude = this.latitude
+            storage.longitude = this.longitude
+        }
+    }
+
+    private val mLocationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            // do work here
+            locationResult.lastLocation
+            onLocationChanged(locationResult.lastLocation)
+        }
+    }
+
+    protected fun startLocationUpdates() {
+
+        // Create the location request to start receiving updates
+        mLocationRequest = LocationRequest()
+        mLocationRequest!!.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        mLocationRequest!!.setInterval(INTERVAL)
+        mLocationRequest!!.setFastestInterval(FASTEST_INTERVAL)
+
+        // Create LocationSettingsRequest object using location request
+        val builder = LocationSettingsRequest.Builder()
+        builder.addLocationRequest(mLocationRequest!!)
+        val locationSettingsRequest = builder.build()
+
+        val settingsClient = LocationServices.getSettingsClient(this)
+        settingsClient.checkLocationSettings(locationSettingsRequest)
+
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+        // new Google API SDK v11 uses getFusedLocationProviderClient(this)
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+
+            return
+        }
+        mFusedLocationProviderClient!!.requestLocationUpdates(mLocationRequest, mLocationCallback,
+                Looper.myLooper())
+    }
+
+    private fun stoplocationUpdates() {
+        mFusedLocationProviderClient!!.removeLocationUpdates(mLocationCallback)
+    }
+
+    fun onLocationChanged(location: Location) {
+        // New location has now been determined
+
+        mLastLocation = location
+        if (mLastLocation != null) {
+
+// Update the UI from here
+        }
+
+
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -176,23 +244,23 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
             }
         }
         findViewById<RelativeLayout>(R.id.mainContainer).visibility = View.GONE
-        handler.postDelayed(runnable, 100)
+
     }
 
     inner class weatherTask() : AsyncTask<String, Void, String>() {
         override fun onPreExecute() {
 
             if (ActivityCompat.checkSelfPermission(
-                    this@MainActivity,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                    this@MainActivity,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
+                            this@MainActivity,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                            this@MainActivity,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED
             ) {
                 val permissions = arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
                 )
                 ActivityCompat.requestPermissions(this@MainActivity, permissions, 0)
             }
@@ -215,9 +283,9 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
         override fun doInBackground(vararg params: String?): String? {
 
             if (multiply)
-                Loader.visibility = View.GONE
 
-            city = cities.text.toString()
+
+                city = cities.text.toString()
             var response: String?
             try {
                 response = ""
@@ -225,8 +293,8 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
                     if (switch1.isChecked == false)
                         response = response1(response, city)
                     if (switch1.isChecked == true) {
-                       response= URL("https://www.google.by/maps/").readText(
-                            Charsets.UTF_8)
+                        // response= URL("https://www.google.by/maps/search/er/@40.4959367,50.899725,4z/data=!3m1!4b1").readText(
+                        //Charsets.UTF_8)
                         getLastLocation()
                         response = response2(response, city)
                     }
@@ -250,13 +318,25 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
         override fun onPostExecute(result: String?) {
 
             k = 0
-            Handler().postDelayed({
-                relativeLayout2.visibility = View.VISIBLE
-                Loader.visibility = View.GONE
-                Daytoday.visibility = View.VISIBLE
-                findViewById<Button>(R.id.button).visibility = View.VISIBLE
-                imageView.visibility = View.VISIBLE
-            }, 3000)
+            if (switch1.isChecked == false) {
+                Handler().postDelayed({
+                    relativeLayout2.visibility = View.VISIBLE
+                    Loader.visibility = View.GONE
+                    Daytoday.visibility = View.VISIBLE
+                    findViewById<Button>(R.id.button).visibility = View.VISIBLE
+                    imageView.visibility = View.VISIBLE
+                    switch1.isEnabled = true
+                }, 4000)
+            } else {
+                Handler().postDelayed({
+                    relativeLayout2.visibility = View.VISIBLE
+                    Loader.visibility = View.GONE
+                    Daytoday.visibility = View.VISIBLE
+                    findViewById<Button>(R.id.button).visibility = View.VISIBLE
+                    imageView.visibility = View.VISIBLE
+                    switch1.isEnabled = true
+                }, 4000)
+            }
 
             super.onPostExecute(result)
             var gson = Gson()
@@ -273,9 +353,9 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
                     var address = data.name + ", " + data.sys?.country
                     var ICON = data.weather!![0]?.icon
                     val updatedAtText =
-                        "Обновлено: " + SimpleDateFormat(" hh:mm a", Locale.ENGLISH).format(
-                            Date(updatedAt?.times(1000)!!)
-                        )
+                            "Обновлено: " + SimpleDateFormat(" hh:mm a", Locale.ENGLISH).format(
+                                    Date(updatedAt?.times(1000)!!)
+                            )
                     findViewById<RelativeLayout>(R.id.mainContainer).visibility = View.VISIBLE
                     findViewById<TextView>(R.id.temp).text = temp.toString() + "°c"
                     findViewById<TextView>(R.id.address).text = address;
@@ -309,9 +389,9 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
 
     fun response1(response2: String?, city: String): String {
         var response2 =
-            URL("https://api.openweathermap.org/data/2.5/weather?q=$city&units=$temperatura&appid=$API&lang=ru").readText(
-                Charsets.UTF_8
-            )
+                URL("https://api.openweathermap.org/data/2.5/weather?q=$city&units=$temperatura&appid=$API&lang=ru").readText(
+                        Charsets.UTF_8
+                )
         return response2
     }
 
@@ -319,26 +399,26 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
         var response2 = ""
         while (response2 == "") {
             response2 =
-                URL("https://api.openweathermap.org/data/2.5/weather?lat=${storage.latitude}&lon=${storage.longitude}&units=$temperatura&appid=19980e00b25d8dd054c9cbf6233c0fb2&lang=ru").readText(
-                    Charsets.UTF_8
-                )
+                    URL("https://api.openweathermap.org/data/2.5/weather?lat=${storage.latitude}&lon=${storage.longitude}&units=$temperatura&appid=19980e00b25d8dd054c9cbf6233c0fb2&lang=ru").readText(
+                            Charsets.UTF_8
+                    )
         }
         return response2
     }
 
     fun response3(response2: String?, city: String): String {
         var response2 =
-            URL("https://api.openweathermap.org/data/2.5/onecall?lat=${storage.latitude2}&lon=${storage.longitude2}&exclude=hourly,current,minutely,alerts&units=$temperatura&appid=19980e00b25d8dd054c9cbf6233c0fb2").readText(
-                Charsets.UTF_8
-            )
+                URL("https://api.openweathermap.org/data/2.5/onecall?lat=${storage.latitude2}&lon=${storage.longitude2}&exclude=hourly,current,minutely,alerts&units=$temperatura&appid=19980e00b25d8dd054c9cbf6233c0fb2").readText(
+                        Charsets.UTF_8
+                )
         return response2
     }
 
     fun response4(response2: String?, city: String): String {
         var response2 =
-            URL("https://api.openweathermap.org/data/2.5/onecall?lat=${storage.latitude}&lon=${storage.longitude}&exclude=hourly,current,minutely,alerts&units=$temperatura&appid=19980e00b25d8dd054c9cbf6233c0fb2").readText(
-                Charsets.UTF_8
-            )
+                URL("https://api.openweathermap.org/data/2.5/onecall?lat=${storage.latitude}&lon=${storage.longitude}&exclude=hourly,current,minutely,alerts&units=$temperatura&appid=19980e00b25d8dd054c9cbf6233c0fb2").readText(
+                        Charsets.UTF_8
+                )
         return response2
     }
 
@@ -376,9 +456,9 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
         try {
             var gson = Gson()
             var response: String? =
-                URL("https://api.openweathermap.org/data/2.5/weather?q=$city&units=$temperatura&appid=$API&lang=ru").readText(
-                    Charsets.UTF_8
-                )
+                    URL("https://api.openweathermap.org/data/2.5/weather?q=$city&units=$temperatura&appid=$API&lang=ru").readText(
+                            Charsets.UTF_8
+                    )
             var data = gson.fromJson(response, Response::class.java)
             storage.longitude2 = data.coord?.lon.toString()
             storage.latitude2 = data.coord?.lat.toString()
