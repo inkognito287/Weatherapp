@@ -41,8 +41,8 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
     lateinit var cities: EditText
     lateinit var button: Button
     lateinit var Daytodaybutton: Button
-    var titles = arrayOfNulls<String>(6)
-    var details = arrayOfNulls<String>(6)
+    var temperaturadnem = arrayOfNulls<String>(6)
+    var temperaturanochy = arrayOfNulls<String>(6)
     var images = intArrayOf(1, 2, 3, 4, 5, 6)
     var heplmassiv = arrayOf("er", "", "", "", "", "")
     lateinit var gestureDetector: GestureDetector
@@ -71,12 +71,13 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         mLocationRequest = LocationRequest()
-        startLocationUpdates()
-        //stoplocationUpdates()
+
+
         val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         switch1.isEnabled = false
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        getLastLocation()
+        startLocationUpdates()
+        Handler().postDelayed({getLastLocation()},3000)
         relativeLayout2.visibility = View.GONE
         Daytoday.visibility = View.INVISIBLE
         findViewById<ImageView>(R.id.imageView).visibility = View.INVISIBLE
@@ -88,19 +89,21 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
         button.setOnClickListener(this)
         Daytodaybutton.setOnClickListener(this)
         gestureDetector = GestureDetector(this, this)
-
-
-
         layoutManager = LinearLayoutManager(this)
         weatherTask().execute()
 
         switch1.setOnClickListener(View.OnClickListener {
+
             switch1.isEnabled = false
             multiply = false
             if (switch1.isChecked) {
+                button.isEnabled=false
                 findViewById<EditText>(R.id.cities).isEnabled = false
 
-            } else cities.isEnabled = true
+            } else {
+                cities.isEnabled = true
+                button.isEnabled=true
+            }
             getLastLocation()
             weatherTask().execute()
         })
@@ -292,11 +295,12 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
                 response = ""
                 if (!multiply) {
                     if (switch1.isChecked == false)
-                        response = response1(response, city)
+                    {  getLastLocation()
+                        response = response1(response, city)}
                     if (switch1.isChecked == true) {
                         // response= URL("https://www.google.by/maps/search/er/@40.4959367,50.899725,4z/data=!3m1!4b1").readText(
                         //Charsets.UTF_8)
-                        getLastLocation()
+                         //getLastLocation()
                         response = response2(response, city)
                     }
                 }
@@ -377,10 +381,10 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
 
                     // var gson=Gson()
                     var data2 = gson.fromJson(result, Response2::class.java)
-                    val start = Intent(this@MainActivity, kek()::class.java)
-                    start.putExtra("details", TempMIN(data2))
+                    val start = Intent(this@MainActivity, razbivkapodniam()::class.java)
+                    start.putExtra("temperaturanochy", TempMIN(data2))
                     start.putExtra("images", IDIMAGE(data2))
-                    start.putExtra("titles", TempMAX(data2))
+                    start.putExtra("temperaturadnem", TempMAX(data2))
                     startActivity(start)
                 }
             } catch (e: Exception) {
@@ -427,17 +431,17 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
 
         for (i in 0..5) {
             var temp2 = data2.daily!![i]?.temp?.day
-            titles[i] = temp2.toString()
+            temperaturadnem[i] = temp2.toString()
         }
-        return titles
+        return temperaturadnem
     }
 
     fun TempMIN(data2: Response2): kotlin.Array<String?> {
         for (i in 0..5) {
             var temp2 = data2.daily!![i]?.temp?.night
-            details[i] = temp2.toString()
+            temperaturanochy[i] = temp2.toString()
         }
-        return details
+        return temperaturanochy
     }
 
     fun IDIMAGE(data2: Response2): IntArray {

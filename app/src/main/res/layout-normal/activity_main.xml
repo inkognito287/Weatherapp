@@ -247,13 +247,12 @@
 
                     <ImageView
                         android:id="@+id/imageView"
-                        android:layout_width="163dp"
-                        android:layout_height="148dp"
+                        android:layout_width="170dp"
+                        android:layout_height="167dp"
                         android:layout_marginTop="8dp"
                         android:src="@drawable/sun"
                         app:barrierAllowsGoneWidgets="false"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/button"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:visibility="visible" />
 

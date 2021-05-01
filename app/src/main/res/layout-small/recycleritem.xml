@@ -18,7 +18,7 @@
             tools:layout_editor_absoluteY="0dp">
 
             <TextView
-                android:id="@+id/textViewSmall"
+                android:id="@+id/textViewNoch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
@@ -39,13 +39,13 @@
                 app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
-                android:id="@+id/textViewLarge"
+                android:id="@+id/textViewDen"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="wewe"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="@+id/textView6"
-                app:layout_constraintStart_toStartOf="@+id/textViewSmall"
+                app:layout_constraintStart_toStartOf="@+id/textViewNoch"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="1.0" />
 
