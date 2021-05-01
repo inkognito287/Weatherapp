@@ -99,13 +99,22 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
             if (switch1.isChecked) {
                 button.isEnabled=false
                 findViewById<EditText>(R.id.cities).isEnabled = false
+                mLocationRequest = LocationRequest()
+                startLocationUpdates()
+                Loader.visibility=View.VISIBLE
+                Handler().postDelayed({getLastLocation()
+                },2000)
+                Handler().postDelayed({weatherTask().execute()
+                },3000)
 
             } else {
                 cities.isEnabled = true
                 button.isEnabled=true
+                getLastLocation()
+                weatherTask().execute()
             }
-            getLastLocation()
-            weatherTask().execute()
+
+
         })
     }
 
@@ -149,9 +158,16 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
                 if (abs(valueY) > MIN_DISTANCE) {
                     if (y2 > y1) {
                         multiply = false
+                        mLocationRequest = LocationRequest()
+                        startLocationUpdates()
+                        Loader.visibility=View.VISIBLE
+                        Handler().postDelayed({getLastLocation()
+                         },2000)
+                        Handler().postDelayed({weatherTask().execute()
+                        },3000)
+//                        Handler().postDelayed({getLastLocation()
+//                            weatherTask().execute()},2000)
 
-
-                        weatherTask().execute()
 
                     }
                 }
@@ -254,6 +270,7 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
     inner class weatherTask() : AsyncTask<String, Void, String>() {
         override fun onPreExecute() {
 
+
             if (ActivityCompat.checkSelfPermission(
                             this@MainActivity,
                             Manifest.permission.ACCESS_FINE_LOCATION
@@ -334,6 +351,7 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
                 }, 4000)
             } else {
                 Handler().postDelayed({
+
                     relativeLayout2.visibility = View.VISIBLE
                     Loader.visibility = View.GONE
                     Daytoday.visibility = View.VISIBLE
