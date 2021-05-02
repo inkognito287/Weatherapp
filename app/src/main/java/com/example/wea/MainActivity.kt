@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
+import android.opengl.Visibility
 import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
@@ -53,9 +54,6 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
     var temperatura: String = "metric"
     var multiply: Boolean = storage.multiply
     private var layoutManager: RecyclerView.LayoutManager? = null
-    private var hasGps = false
-    private var hasNetwork = false
-    private val mGoogleApiClient: GoogleApiClient? = null
     lateinit var mLastLocation: Location
 
     companion object {
@@ -96,8 +94,12 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
 
             switch1.isEnabled = false
             multiply = false
+            mainContainer.visibility=View.GONE
+            relativeLayout2.visibility=View.GONE
             if (switch1.isChecked) {
                 button.isEnabled=false
+
+
                 findViewById<EditText>(R.id.cities).isEnabled = false
                 mLocationRequest = LocationRequest()
                 startLocationUpdates()
@@ -157,6 +159,8 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
 
                 if (abs(valueY) > MIN_DISTANCE) {
                     if (y2 > y1) {
+                        mainContainer.visibility=View.GONE
+                        relativeLayout2.visibility=View.GONE
                         multiply = false
                         mLocationRequest = LocationRequest()
                         startLocationUpdates()

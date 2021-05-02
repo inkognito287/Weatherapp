@@ -8,5 +8,6 @@ class storage {
         var latitude2 = "434"
         var longitude2 = "1212"
         var citty = "london"
+        var mesto=""
     }
 }

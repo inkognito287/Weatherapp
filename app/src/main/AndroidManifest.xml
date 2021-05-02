@@ -14,10 +14,11 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.Wea">
-        <activity android:name=".SecondActivity">
+
+        <activity android:name=".razbivkapodniam">
 
         </activity>
-        <activity android:name=".razbivkapodniam">
+        <activity android:name=".Day">
 
         </activity>
 

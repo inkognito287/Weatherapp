@@ -26,14 +26,10 @@
                 android:id="@+id/temp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="73dp"
-                android:layout_marginLeft="73dp"
-                android:layout_marginEnd="66dp"
-                android:layout_marginRight="66dp"
                 android:layout_marginBottom="32dp"
                 android:fontFamily="@font/adamina"
                 android:text="20.23C"
-                android:textSize="160dp"
+                android:textSize="110dp"
                 app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -72,7 +68,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/adamina"
                             android:text="TextView"
-                            android:textSize="36sp" />
+                            android:textSize="30sp" />
 
                         <TextView
                             android:id="@+id/update"
@@ -80,7 +76,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/adamina"
                             android:text="TextView"
-                            android:textSize="36sp" />
+                            android:textSize="30sp" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -94,7 +90,7 @@
                                 android:layout_weight="1"
                                 android:fontFamily="@font/adamina"
                                 android:text="Скорость ветра:"
-                                android:textSize="36sp" />
+                                android:textSize="30sp" />
 
                             <Space
                                 android:layout_width="10dp"
@@ -107,7 +103,7 @@
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/adamina"
                                 android:text="TextView"
-                                android:textSize="36sp" />
+                                android:textSize="30sp" />
 
                         </LinearLayout>
 
@@ -117,7 +113,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/adamina"
                             android:text="TextView"
-                            android:textSize="36sp" />
+                            android:textSize="30sp" />
 
                         <TextView
                             android:id="@+id/temp_max"
@@ -125,7 +121,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/adamina"
                             android:text="TextView"
-                            android:textSize="36sp" />
+                            android:textSize="30sp" />
 
                         <TextView
                             android:id="@+id/description"
@@ -133,7 +129,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/adamina"
                             android:text="TextView"
-                            android:textSize="36sp" />
+                            android:textSize="30sp" />
 
                         <TextView
                             android:id="@+id/pressure"
@@ -141,7 +137,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/adamina"
                             android:text="TextView"
-                            android:textSize="36sp" />
+                            android:textSize="30sp" />
 
                     </LinearLayout>
 
@@ -239,8 +235,8 @@
 
                     <Button
                         android:id="@+id/button"
-                        android:layout_width="475dp"
-                        android:layout_height="112dp"
+                        android:layout_width="380dp"
+                        android:layout_height="109dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginLeft="8dp"
                         android:layout_marginTop="112dp"
@@ -262,8 +258,8 @@
 
                     <Button
                         android:id="@+id/Daytoday"
-                        android:layout_width="478dp"
-                        android:layout_height="114dp"
+                        android:layout_width="372dp"
+                        android:layout_height="106dp"
                         android:layout_marginStart="10dp"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="15dp"
