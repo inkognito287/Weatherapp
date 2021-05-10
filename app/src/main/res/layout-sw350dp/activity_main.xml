@@ -26,11 +26,15 @@
                 android:id="@+id/temp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
+                android:layout_marginStart="73dp"
+                android:layout_marginLeft="73dp"
+                android:layout_marginEnd="66dp"
+                android:layout_marginRight="66dp"
+                android:layout_marginBottom="200dp"
                 android:fontFamily="@font/adamina"
                 android:text="20.23C"
-                android:textSize="110dp"
-                app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+                android:textSize="60dp"
+                app:layout_constraintBottom_toBottomOf="@+id/constraintLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:visibility="visible" />
@@ -68,7 +72,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/adamina"
                             android:text="TextView"
-                            android:textSize="30sp" />
+                            android:textSize="18sp" />
 
                         <TextView
                             android:id="@+id/update"
@@ -76,7 +80,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/adamina"
                             android:text="TextView"
-                            android:textSize="30sp" />
+                            android:textSize="18sp" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -90,7 +94,7 @@
                                 android:layout_weight="1"
                                 android:fontFamily="@font/adamina"
                                 android:text="Скорость ветра:"
-                                android:textSize="30sp" />
+                                android:textSize="18sp" />
 
                             <Space
                                 android:layout_width="10dp"
@@ -103,7 +107,7 @@
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/adamina"
                                 android:text="TextView"
-                                android:textSize="30sp" />
+                                android:textSize="18sp" />
 
                         </LinearLayout>
 
@@ -113,7 +117,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/adamina"
                             android:text="TextView"
-                            android:textSize="30sp" />
+                            android:textSize="18sp" />
 
                         <TextView
                             android:id="@+id/temp_max"
@@ -121,7 +125,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/adamina"
                             android:text="TextView"
-                            android:textSize="30sp" />
+                            android:textSize="18sp" />
 
                         <TextView
                             android:id="@+id/description"
@@ -129,7 +133,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/adamina"
                             android:text="TextView"
-                            android:textSize="30sp" />
+                            android:textSize="18sp" />
 
                         <TextView
                             android:id="@+id/pressure"
@@ -137,7 +141,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/adamina"
                             android:text="TextView"
-                            android:textSize="30sp" />
+                            android:textSize="18sp" />
 
                     </LinearLayout>
 
@@ -145,16 +149,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <EditText
-            android:id="@+id/cities"
-            android:layout_width="473dp"
-            android:layout_height="80dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:paddingLeft="10dp"
-            android:text="polatsk"
-            android:textSize="35dp" />
 
     </RelativeLayout>
 
@@ -165,23 +159,21 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
-        android:height="50dp"
         android:checked="false"
+        android:paddingEnd="100dp"
         android:paddingRight="100dp"
-        android:switchMinWidth="80dp"
         android:text="Определить по местоположению"
-        android:textSize="35dp"
         android:theme="@style/MySwitch"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
-        android:layout_width="500dp"
+        android:layout_width="200dp"
         android:layout_height="0dp"
         android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/mainContainer"
         tools:visibility="visible">
 
         <ProgressBar
@@ -189,19 +181,11 @@
             style="?android:attr/progressBarStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:maxWidth="50dp"
-            android:maxHeight="50dp"
+            android:maxWidth="24dp"
+            android:maxHeight="24dp"
             tools:visibility="visible" />
 
     </RelativeLayout>
-
-    <TextView
-        android:id="@+id/errorText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="150sp"
-        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/mainContainer"
@@ -234,40 +218,28 @@
                     android:layout_height="match_parent">
 
                     <Button
-                        android:id="@+id/button"
-                        android:layout_width="380dp"
-                        android:layout_height="109dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginTop="112dp"
-                        android:text="Найти город"
-                        android:textSize="35dp"
+                        android:id="@+id/Daytoday"
+                        android:layout_width="167dp"
+                        android:layout_height="54dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="50dp"
+                        android:text="Прогноз на неделю"
                         app:backgroundTint="@color/button"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
                         android:id="@+id/imageView"
-                        android:layout_width="395dp"
-                        android:layout_height="405dp"
+                        android:layout_width="170dp"
+                        android:layout_height="167dp"
+                        android:layout_marginTop="8dp"
                         android:src="@drawable/sun"
                         app:barrierAllowsGoneWidgets="false"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:visibility="visible" />
 
-                    <Button
-                        android:id="@+id/Daytoday"
-                        android:layout_width="372dp"
-                        android:layout_height="106dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="15dp"
-                        android:text="Прогноз на неделю"
-                        android:textSize="35dp"
-                        app:backgroundTint="@color/button"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/button" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -289,14 +261,39 @@
         app:layout_constraintTop_toTopOf="@+id/relativeLayout2"
         app:layout_constraintVertical_bias="0.0" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <TextView
+        android:id="@+id/errorText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Проверьте подключение к интернету"
+        android:textSize="50dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <SearchView
+        android:id="@+id/cities"
+        android:layout_width="171dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:focusableInTouchMode="false"
+        android:onClick="findClick"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ListView
+        android:id="@+id/listviewhint"
+        android:layout_width="179dp"
+        android:layout_height="60dp"
+        android:background="#FFFFFF"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/cities"
+        app:layout_constraintStart_toStartOf="@+id/cities"
+        app:layout_constraintTop_toBottomOf="@+id/cities"
         tools:visibility="visible" />
 
 

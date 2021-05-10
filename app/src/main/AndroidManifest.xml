@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Wea">
 
-        <activity android:name=".razbivkapodniam">
+        <activity android:name=".weeklyforecast">
 
         </activity>
         <activity android:name=".Day">
@@ -34,6 +34,9 @@
             </intent-filter>
 
         </activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDiaE9ITztS49a6ylYjZ88JZNjk0ZgW1xo" />
 
         <meta-data
             android:name="preloaded_fonts"

@@ -1,101 +1,68 @@
 package com.example.wea
-
-
-import android.content.Context
-import android.content.Intent
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.startActivity
-import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.recycleritem.*
-import kotlinx.android.synthetic.main.recycleritem.view.*
 import java.text.SimpleDateFormat
 import java.util.*
-
-
-class razbivkapodniam : AppCompatActivity() {
-        public override fun onCreate(savedInstanceState: Bundle?) {
+class weeklyforecast : AppCompatActivity() {
+    public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_sec)
         val intent = getIntent()
-        val temperaturanochy = intent.getStringArrayExtra("temperaturanochy")
+        val nightTemperature = intent.getStringArrayExtra("nightTemperature")
 
         val images = intent.getIntArrayExtra("images")
-        val temperaturadnem = intent.getStringArrayExtra("temperaturadnem")
-        var k = 4
+        val dayTemperature = intent.getStringArrayExtra("dayTemperature")
+
 
         val recyclerView: RecyclerView = findViewById(R.id.recyclerView1)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = CustomRecyclerAdapter(temperaturanochy, temperaturadnem, images)
-
-
+        recyclerView.adapter = CustomRecyclerAdapter(nightTemperature, dayTemperature, images)
     }
     class CustomRecyclerAdapter(
-            private val names: Array<String>,
-            private val names2: Array<String>,
-            private val names3: IntArray?
+        private val names: Array<String>,
+        private val names2: Array<String>,
+        private val names3: IntArray?
     ) :
-            RecyclerView.Adapter<CustomRecyclerAdapter.MyViewHolder>() {
-        fun kykareky(position2:Int){
-            storage.mesto=position2.toString()
-
-        }
+        RecyclerView.Adapter<CustomRecyclerAdapter.MyViewHolder>() {
         val ogo = Date()
         val calendarik = Calendar.getInstance()
         val format1 = SimpleDateFormat("EEEE")
-
-       inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
+        inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             var den: TextView? = null
             var noch: TextView? = null
             var Imageweather: ImageView? = null
             var dayofnedelia: TextView? = null
-
-            init{
-
+            init {
                 den = itemView.findViewById(R.id.textViewDen)
                 noch = itemView.findViewById(R.id.textViewNoch)
                 Imageweather = itemView.findViewById(R.id.imageView2)
                 dayofnedelia = itemView.findViewById(R.id.dayofnedelia)
-                itemView.setOnClickListener{v:View->
-                    val position2:Int=adapterPosition
-
-
-
+                itemView.setOnClickListener {
+                    _: View ->
+                }
             }
-
-
         }
-            }
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
 
             val itemView =
-                    LayoutInflater.from(parent.context)
-                            .inflate(R.layout.recycleritem, parent, false)
-
-
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.recycleritem, parent, false)
             return MyViewHolder(itemView)
-            // TODO("Not yet implemented")
         }
-
         override fun getItemCount(): Int {
             return names.size
-            //TODO("Not yet implemented")
         }
-
+        @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: MyViewHolder, position2: Int) {
-
-
             try {
 
                 holder.den?.text = "%.1f".format(names2.get(position2).toFloat()) + "°c"
@@ -105,15 +72,9 @@ class razbivkapodniam : AppCompatActivity() {
                 calendarik.setTime(ogo)
                 calendarik.add(Calendar.DAY_OF_WEEK, position2 + 1)
                 holder.dayofnedelia?.text = format1.format(calendarik.getTime()).toString()
-            } catch (e: Exception) {
-
-            }
+            } catch (e: Exception) { }
 
             // TODO("Not yet implemented")
         }
-
-
     }
-
-
 }

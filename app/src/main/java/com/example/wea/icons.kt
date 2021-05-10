@@ -19,5 +19,4 @@ enum class icons(val ok: Int) {
     ic_11n(R.drawable.ic_11d),
     ic_50n(R.drawable.ic_50d),
     ic_13n(R.drawable.ic_13d),
-
 }
