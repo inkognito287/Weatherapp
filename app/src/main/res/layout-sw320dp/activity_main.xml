@@ -3,10 +3,11 @@
 
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/ere"
+    android:id="@+id/space"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient"
+    android:onClick="emptySpaceClick"
     android:visibility="visible"
     tools:context=".MainActivity">
 
@@ -173,6 +174,7 @@
         android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/mainContainer"
+        app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible">
 
         <ProgressBar
@@ -229,13 +231,15 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
+
                     <ImageView
+
                         android:id="@+id/imageView"
                         android:layout_width="139dp"
                         android:layout_height="129dp"
                         android:layout_marginTop="8dp"
                         android:src="@drawable/sun"
-                        app:barrierAllowsGoneWidgets="false"
+
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:visibility="visible" />
@@ -281,7 +285,6 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:focusableInTouchMode="false"
-        android:onClick="findClick"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

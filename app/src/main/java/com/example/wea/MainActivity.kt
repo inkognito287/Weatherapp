@@ -2,6 +2,7 @@ package com.example.wea
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -13,11 +14,11 @@ import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.AsyncTask
 import android.os.Bundle
-import android.os.Handler
 import android.os.Looper
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
+import android.view.WindowManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -29,7 +30,6 @@ import jsonresponce.Response
 import jsonresponce.Response2
 import jsonresponce.Response5
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.delay
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
@@ -61,8 +61,8 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
     var layoutManager: RecyclerView.LayoutManager? = null
     var mFusedLocationProviderClient: FusedLocationProviderClient? = null
     var names = arrayOf("")
-    private val vrblInterval = 2000
-    private val fastInterval: Long = 1000
+    val vrblInterval = 2000
+    val fastInterval: Long = 1000
     companion object {
         const val MIN_DISTANCE = 150
     }
@@ -72,6 +72,7 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
         supportActionBar?.hide()
         relativeLayout2.visibility = View.GONE
         mainContainer.visibility = View.GONE
+        cities.visibility = View.GONE
         startLocationUpdates()
         pref = getSharedPreferences(code, Context.MODE_PRIVATE)
         city = pref?.getString(code, "")!!
@@ -79,27 +80,26 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
         mLocationRequest = LocationRequest()
         switch1.isEnabled = false
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        cities.visibility = View.GONE
         Daytodaybutton = findViewById(R.id.Daytoday)
         Daytodaybutton.setOnClickListener(this)
         gestureDetector = GestureDetector(this, this)
         layoutManager = LinearLayoutManager(this)
         weatherTask().execute()
-
         switch1.setOnClickListener {
+            cities.clearFocus()
             switch1.isEnabled = false
             multiply = false
             if (switch1.isChecked) {
                 saveData(city)
-                cities.isClickable = false
                 Loader.visibility = View.VISIBLE
+
             } else {
                 city = pref?.getString(code, "")!!
                 cities.isClickable = true
                 city = pref?.getString(code, "")!!
+
             }
             weatherTask().execute()
-
             checkInternet()
         }
     }
@@ -125,9 +125,6 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
         super.onDestroy()
         saveData(city)
     }
-
-    fun findClick(view: View?) {
-    }
     override fun onClick(view: View?) {
         if (view == this.Daytodaybutton) {
 
@@ -143,6 +140,30 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
             weatherTask().execute()
         }
     }
+    override fun onBackPressed() {
+        AlertDialog.Builder(this).apply {
+            listviewhint.visibility=View.GONE
+            setTitle("Подтверждение")
+            setMessage("Вы уверены, что хотите выйти из программы?")
+
+            setPositiveButton("Да") { _, _ ->
+                super.onBackPressed()
+            }
+
+            setNegativeButton("Нет") { _, _ ->
+            }
+            setCancelable(true)
+        }.create().show()
+    }
+
+    fun emptySpaceClick(v:View){
+        if (v==space){
+        cities.clearFocus()
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+        listviewhint.visibility=View.GONE
+        }
+    }
+
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         gestureDetector.onTouchEvent(event)
@@ -168,14 +189,6 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
             }
         }
         return super.onTouchEvent(event)
-    }
-    suspend fun go() {
-        startLocationUpdates()
-        delay(4000)
-        stoplocationUpdates()
-        getLastLocation()
-        startLocationUpdates()
-        getLastLocation()
     }
     fun checkInternet(): Boolean {
         val context = this
@@ -211,7 +224,6 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
     }
     private val mLocationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
-            // do work here
             locationResult.lastLocation
             onLocationChanged(locationResult.lastLocation)
         }
@@ -237,24 +249,12 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
             Looper.myLooper()
         )
     }
-    private fun stoplocationUpdates() {
+    private fun stopLocationUpdates() {
         mFusedLocationProviderClient!!.removeLocationUpdates(mLocationCallback)
     }
 
     fun onLocationChanged(location: Location) {
         mLastLocation = location
-    }
-    private fun refresh() {
-        val handler = Handler()
-        val runnable = object : Runnable {
-            override fun run() {
-                try {
-                    recreate()
-                } catch (e: Exception) {
-                }
-            }
-        }
-        findViewById<RelativeLayout>(R.id.mainContainer).visibility = View.GONE
     }
     inner class weatherTask : AsyncTask<String, Void, String>() {
         override fun onPreExecute() {
@@ -283,10 +283,10 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
         }
         override fun doInBackground(vararg params: String?): String? {
             try {
-                val ok = Gson()
-                var AllCities = URL("https://nominatim.openstreetmap.org/search?city=${Cities.query}&accept-language=en&format=json").readText(Charsets.UTF_8)
-                AllCities = "{\"main\":" + AllCities + "}"
-                var dataCITIES = ok.fromJson(AllCities, Response5::class.java)
+                val test = Gson()
+                var allCities = URL("https://nominatim.openstreetmap.org/search?city=${Cities.query}&accept-language=en&format=json").readText(Charsets.UTF_8)
+                allCities = "{\"main\":" + allCities + "}"
+                var dataCITIES = test.fromJson(allCities, Response5::class.java)
                 names[0] = dataCITIES.main!![0]!!.displayName.toString()
                 var pokaz = dataCITIES.main!![0]!!.displayName.toString()
                 pokaz = pokaz.substring(0, pokaz.indexOf(','))
@@ -308,7 +308,7 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
                 }
                 if (multiply) {
                     if (!switch1.isChecked) {
-                        metodLongLat()
+                        getLongLat()
                         response = response3()
                     }
                     if (switch1.isChecked) {
@@ -323,6 +323,8 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
         }
         @SuppressLint("SetTextI18n")
         override fun onPostExecute(result: String?) {
+            if(result==null)
+                Toast.makeText(this@MainActivity,"Такого города не найдено",Toast.LENGTH_SHORT).show()
             val listview = findViewById<ListView>(R.id.listviewhint)
             val adapter: ArrayAdapter<String?> = ArrayAdapter(this@MainActivity, android.R.layout.simple_list_item_1, names)
             listview.adapter = adapter
@@ -337,12 +339,13 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
             }
             Cities.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(p0: String?): Boolean {
-
                     Cities.clearFocus()
                     listview.visibility = View.GONE
                     if (names.contains(p0)) {
                         adapter.filter.filter(p0)
                     }
+                    if(switch1.isChecked)
+                        switch1.toggle()
                     city = cities.query.toString()
                     weatherTask().execute()
                     return false
@@ -360,7 +363,6 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
                 k = 0
                 openVisibility()
                 switch1.isEnabled = true
-
                 super.onPostExecute(result)
                 val gson = Gson()
                 try {
@@ -374,7 +376,7 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
                         val pressure = data.main?.pressure
                         val windSpeed = data.wind?.speed.toString()
                         val address = data.name + ", " + data.sys?.country
-                        val ICON = data.weather[0]?.icon
+                        val icon = data.weather[0]?.icon
                         val updatedAtText =
                             "Обновлено: " + SimpleDateFormat(" hh:mm a", Locale.ENGLISH).format(
                                 Date(updatedAt?.times(1000)!!)
@@ -391,7 +393,7 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
                         val imageView: ImageView = findViewById(R.id.imageView)
                         var nameimage: Int = 0
                         for (x in icons.values())
-                            if ("ic_" + ICON == x.name)
+                            if ("ic_" + icon == x.name)
                                 nameimage = x.ok
                         imageView.setImageResource(nameimage)
                     }
@@ -416,10 +418,6 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
                 mainContainer.visibility = View.GONE
             }
         }
-    }
-    suspend fun doLocation() {
-
-        getLastLocation()
     }
     fun response1(city: String): String {
         return URL("https://api.openweathermap.org/data/2.5/weather?q=$city&units=$temperatura&appid=$API&lang=ru").readText(
@@ -462,7 +460,7 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
         }
         return images
     }
-    fun metodLongLat() {
+    fun getLongLat() {
         try {
             val gson = Gson()
             val response: String? =
@@ -481,6 +479,7 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
         imageView.visibility = View.VISIBLE
         cities.visibility = View.VISIBLE
         relativeLayout2.visibility = View.VISIBLE
+
     }
     fun closeVisibility() {
         Loader.visibility = View.GONE
@@ -504,3 +503,8 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
     override fun onLongPress(p0: MotionEvent?) {
     }
 }
+
+private fun Switch?.setOnClickListener(onClickListener: View.OnClickListener) {
+
+}
+

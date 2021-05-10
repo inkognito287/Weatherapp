@@ -3,10 +3,11 @@
 
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/ere"
+    android:id="@+id/space"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient"
+    android:onClick="emptySpaceClick"
     android:visibility="visible"
     tools:context=".MainActivity">
 
@@ -30,10 +31,10 @@
                 android:layout_marginLeft="73dp"
                 android:layout_marginEnd="66dp"
                 android:layout_marginRight="66dp"
-                android:layout_marginBottom="200dp"
+                android:layout_marginBottom="155dp"
                 android:fontFamily="@font/adamina"
                 android:text="20.23C"
-                android:textSize="80dp"
+                android:textSize="40sp"
                 app:layout_constraintBottom_toBottomOf="@+id/constraintLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -43,6 +44,7 @@
                 android:id="@+id/constraintLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="70dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -53,8 +55,6 @@
                     android:id="@+id/linearLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="56dp"
-                    android:layout_marginLeft="56dp"
                     android:orientation="horizontal"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -62,7 +62,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <LinearLayout
-                        android:layout_width="300dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
@@ -72,7 +72,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/adamina"
                             android:text="TextView"
-                            android:textSize="18sp" />
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/update"
@@ -80,7 +80,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/adamina"
                             android:text="TextView"
-                            android:textSize="18sp" />
+                            android:textSize="14sp" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -94,7 +94,7 @@
                                 android:layout_weight="1"
                                 android:fontFamily="@font/adamina"
                                 android:text="Скорость ветра:"
-                                android:textSize="18sp" />
+                                android:textSize="14sp" />
 
                             <Space
                                 android:layout_width="10dp"
@@ -107,7 +107,7 @@
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/adamina"
                                 android:text="TextView"
-                                android:textSize="18sp" />
+                                android:textSize="14sp" />
 
                         </LinearLayout>
 
@@ -117,7 +117,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/adamina"
                             android:text="TextView"
-                            android:textSize="18sp" />
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/temp_max"
@@ -125,7 +125,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/adamina"
                             android:text="TextView"
-                            android:textSize="18sp" />
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/description"
@@ -133,7 +133,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/adamina"
                             android:text="TextView"
-                            android:textSize="18sp" />
+                            android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/pressure"
@@ -141,7 +141,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/adamina"
                             android:text="TextView"
-                            android:textSize="18sp" />
+                            android:textSize="14sp" />
 
                     </LinearLayout>
 
@@ -149,15 +149,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <EditText
-            android:id="@+id/cities2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:paddingLeft="10dp"
-            android:text="polatsk" />
 
     </RelativeLayout>
 
@@ -169,6 +160,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
         android:checked="false"
+        android:paddingEnd="100dp"
         android:paddingRight="100dp"
         android:text="Определить по местоположению"
         android:theme="@style/MySwitch"
@@ -182,6 +174,7 @@
         android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/mainContainer"
+        app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible">
 
         <ProgressBar
@@ -194,14 +187,6 @@
             tools:visibility="visible" />
 
     </RelativeLayout>
-
-    <TextView
-        android:id="@+id/errorText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="150sp"
-        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/mainContainer"
@@ -234,38 +219,31 @@
                     android:layout_height="match_parent">
 
                     <Button
-                        android:id="@+id/button"
-                        android:layout_width="200dp"
-                        android:layout_height="60dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginLeft="10dp"
+                        android:id="@+id/Daytoday"
+                        android:layout_width="125dp"
+                        android:layout_height="47dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginLeft="16dp"
                         android:layout_marginTop="50dp"
-                        android:text="Найти город"
+                        android:text="Прогноз на неделю"
+                        android:textSize="12sp"
                         app:backgroundTint="@color/button"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
+
                     <ImageView
+
                         android:id="@+id/imageView"
-                        android:layout_width="190dp"
-                        android:layout_height="182dp"
+                        android:layout_width="139dp"
+                        android:layout_height="129dp"
+                        android:layout_marginTop="8dp"
                         android:src="@drawable/sun"
-                        app:barrierAllowsGoneWidgets="false"
+
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:visibility="visible" />
 
-                    <Button
-                        android:id="@+id/Daytoday"
-                        android:layout_width="200dp"
-                        android:layout_height="60dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="15dp"
-                        android:text="Прогноз на неделю"
-                        app:backgroundTint="@color/button"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/button" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -286,6 +264,40 @@
         app:layout_constraintStart_toStartOf="@+id/mainContainer"
         app:layout_constraintTop_toTopOf="@+id/relativeLayout2"
         app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/errorText"
+        android:layout_width="284dp"
+        android:layout_height="142dp"
+        android:text="Проверьте подключение к интернету"
+        android:textSize="24sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <SearchView
+        android:id="@+id/cities"
+        android:layout_width="159dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:focusableInTouchMode="false"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ListView
+        android:id="@+id/listviewhint"
+        android:layout_width="145dp"
+        android:layout_height="41dp"
+        android:layout_marginTop="8dp"
+        android:background="#FFFFFF"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/cities"
+        app:layout_constraintStart_toStartOf="@+id/cities"
+        app:layout_constraintTop_toBottomOf="@+id/cities" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
