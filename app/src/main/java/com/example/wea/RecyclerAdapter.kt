@@ -11,18 +11,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.text.SimpleDateFormat
 import java.util.*
-class weeklyforecast : AppCompatActivity() {
+class WeeklyForecast : AppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_sec)
         val intent = getIntent()
         val nightTemperature = intent.getStringArrayExtra("nightTemperature")
-
         val images = intent.getIntArrayExtra("images")
         val dayTemperature = intent.getStringArrayExtra("dayTemperature")
-
-
         val recyclerView: RecyclerView = findViewById(R.id.recyclerView1)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = CustomRecyclerAdapter(nightTemperature, dayTemperature, images)

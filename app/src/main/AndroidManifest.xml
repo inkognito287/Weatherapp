@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Wea">
 
-        <activity android:name=".weeklyforecast">
+        <activity android:name=".weeklyForecast">
 
         </activity>
         <activity android:name=".Day">
