@@ -14,7 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.Wea">
-
+        <activity android:name=".LoadingScreen"/>
         <activity android:name=".WeeklyForecast">
 
         </activity>

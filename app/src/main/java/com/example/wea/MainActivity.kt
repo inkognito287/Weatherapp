@@ -83,7 +83,6 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
         startLocationUpdates()
         pref = getSharedPreferences(code, Context.MODE_PRIVATE)
         city = pref?.getString(code, "")!!
-        Cities = findViewById<SearchView>(R.id.cities)
         mLocationRequest = LocationRequest()
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this@MainActivity)
         switch1.isEnabled = false
@@ -141,7 +140,7 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
             }
         }
         if (view == this.cities) {
-            city = Cities.query.toString()
+            city = cities.query.toString()
             weatherTask().execute()
         }
     }
@@ -280,7 +279,6 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
             }
             super.onPreExecute()
             findViewById<ProgressBar>(R.id.Loader).visibility = View.VISIBLE
-            findViewById<TextView>(R.id.errorText).visibility = View.GONE
         }
         override fun doInBackground(vararg params: String?): String? {
             closeHints()
@@ -323,12 +321,11 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
             }
             return response
         }
-
         @SuppressLint("SetTextI18n")
         override fun onPostExecute(result: String?) {
             if (result == null && !switch1.isChecked && checkInternet() && isLocationEnabled()) {
                 cities.visibility = View.VISIBLE
-                if (listviewhint.visibility==View.GONE)
+                if (listviewhint.visibility==View.GONE && cities.query!="")
                 Toast.makeText(this@MainActivity, "Такого города не найдено", Toast.LENGTH_SHORT).show()
             }
             val listview = findViewById<ListView>(R.id.listviewhint)
@@ -336,17 +333,17 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
             listview.adapter = adapter
             listview.setOnItemClickListener { parent, view, position, id ->
                 val element = adapter.getItem(position)
-                Cities.onActionViewExpanded()
-                Cities.setQuery(element, true)
-                Cities.clearFocus()
+                cities.onActionViewExpanded()
+                cities.setQuery(element, true)
+                cities.clearFocus()
                 listview.visibility = View.GONE
                 city = cities.query.toString()
                 weatherTask().execute()
             }
-            Cities.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            cities.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
                 override fun onQueryTextSubmit(p0: String?): Boolean {
-                    Cities.clearFocus()
+                    cities.clearFocus()
                     listview.visibility = View.GONE
                     if (names.contains(p0)) {
                         adapter.filter.filter(p0)
