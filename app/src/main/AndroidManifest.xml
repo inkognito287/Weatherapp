@@ -14,13 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.Wea">
-        <activity android:name=".LoadingScreen"/>
-        <activity android:name=".WeeklyForecast">
+        <activity android:name=".Moreinformation">
+            </activity >
+        <activity android:name=".WeeklyForecast"/>
 
-        </activity>
-        <activity android:name=".Day">
-
-        </activity>
 
         <activity
             android:name=".MainActivity"

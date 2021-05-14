@@ -380,6 +380,7 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
                         start.putExtra("nightTemperature", tempMin(data2))
                         start.putExtra("images", idImage(data2))
                         start.putExtra("dayTemperature", tempMax(data2))
+                        start.putExtra("result",result)
                         startActivity(start)
                         multiply=false
                     }
