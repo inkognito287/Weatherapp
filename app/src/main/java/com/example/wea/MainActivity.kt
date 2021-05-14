@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
         switch1.setOnClickListener {
             cities.clearFocus()
             switch1.isEnabled = false
-            multiply = false
+            //multiply = false
             if (switch1.isChecked) {
                 saveData(city)
                 Loader.visibility = View.VISIBLE
@@ -124,10 +124,12 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
     }
     override fun onStop() {
         super.onStop()
+        deleteData()
         saveData(city)
     }
     override fun onDestroy() {
         super.onDestroy()
+        deleteData()
         saveData(city)
     }
     override fun onClick(view: View?) {
@@ -180,7 +182,7 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
                 val valueY: Float = y2 - y1
                 if (abs(valueY) > MIN_DISTANCE) {
                     if (y2 > y1) {
-                        multiply = false
+                        //multiply = false
                         weatherTask().execute()
                         checkInternet()
                         Loader.visibility = View.VISIBLE
@@ -326,6 +328,7 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
         override fun onPostExecute(result: String?) {
             if (result == null && !switch1.isChecked && checkInternet() && isLocationEnabled()) {
                 cities.visibility = View.VISIBLE
+                if (listviewhint.visibility==View.GONE)
                 Toast.makeText(this@MainActivity, "Такого города не найдено", Toast.LENGTH_SHORT).show()
             }
             val listview = findViewById<ListView>(R.id.listviewhint)
@@ -355,7 +358,7 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
                     return false
                 }
                 override fun onQueryTextChange(p0: String?): Boolean {
-                    multiply = false
+                   // multiply = false
                     listview.visibility = View.VISIBLE
                     weatherTask().execute()
                     listview.adapter = adapter
@@ -381,6 +384,7 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
                         start.putExtra("images", idImage(data2))
                         start.putExtra("dayTemperature", tempMax(data2))
                         startActivity(start)
+                        multiply=false
                     }
                 } catch (e: Exception) {
                 }
