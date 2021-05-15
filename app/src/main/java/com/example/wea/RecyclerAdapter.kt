@@ -21,7 +21,7 @@ class WeeklyForecast : AppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sec)
-
+        getSupportActionBar()!!.hide()
         val intent = getIntent()
         val nightTemperature = intent.getStringArrayExtra("nightTemperature")
         val images = intent.getIntArrayExtra("images")
