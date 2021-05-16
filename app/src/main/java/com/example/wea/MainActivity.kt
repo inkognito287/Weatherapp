@@ -70,6 +70,7 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
     var names = arrayOf("")
     val vrblInterval = 2000
     val fastInterval: Long = 1000
+    var loading=0
     companion object {
         const val MIN_DISTANCE = 150
     }
@@ -159,6 +160,10 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
         }.create().show()
     }
 
+    override fun onStart() {
+        super.onStart()
+
+    }
     fun emptySpaceClick(v: View) {
         if (v == space) {
             cities.clearFocus()
@@ -284,7 +289,7 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
             closeHints()
             try {
                 val test = Gson()
-                var allCities = URL("https://nominatim.openstreetmap.org/search?city=${Cities.query}&accept-language=en&format=json").readText(Charsets.UTF_8)
+                var allCities = URL("https://nominatim.openstreetmap.org/search?city=${cities.query}&accept-language=en&format=json").readText(Charsets.UTF_8)
                 allCities = "{\"main\":" + allCities + "}"
                 var dataCITIES = test.fromJson(allCities, Response5::class.java)
                 names[0] = dataCITIES.main!![0]!!.displayName.toString()
