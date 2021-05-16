@@ -9,4 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="yellow">#FFC107</color>
     <color name="button">#00A194</color>
+    <style name="splash" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/black</item>
+    </style>
 </resources>

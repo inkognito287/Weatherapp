@@ -18,7 +18,8 @@
             </activity >
         <activity android:name=".WeeklyForecast"   />
 
-        <activity android:name=".Loading">
+        <activity android:name=".Loading"
+            android:theme="@style/splash">
         <intent-filter>
 
         <action android:name="android.intent.action.MAIN" />

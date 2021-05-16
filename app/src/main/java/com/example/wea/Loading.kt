@@ -27,7 +27,7 @@ class Loading : AppCompatActivity() {
         Handler().postDelayed(
             {
                 run() {
-                    var MainIntent = Intent(this@Loading, MainActivity::class.java)
+                    val MainIntent = Intent(this@Loading, MainActivity::class.java)
                     startActivity(MainIntent)
                     this@Loading.finish()
                 }
