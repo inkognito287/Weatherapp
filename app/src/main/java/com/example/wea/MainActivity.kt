@@ -47,7 +47,6 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
     lateinit var longitude: String
     lateinit var Daytodaybutton: Button
     lateinit var mLastLocation: Location
-    lateinit var Cities: SearchView
     lateinit var gestureDetector: GestureDetector
     lateinit var mLocationRequest: LocationRequest
     val API: String = "19980e00b25d8dd054c9cbf6233c0fb2" // Use API key
@@ -70,7 +69,8 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
     var names = arrayOf("")
     val vrblInterval = 2000
     val fastInterval: Long = 1000
-    var loading=0
+    var heplVariable = 0
+    var exception = false
     companion object {
         const val MIN_DISTANCE = 150
     }
@@ -95,11 +95,12 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
         switch1.setOnClickListener {
             cities.clearFocus()
             switch1.isEnabled = false
-            //multiply = false
             if (switch1.isChecked) {
+                heplVariable = 0
                 saveData(city)
                 Loader.visibility = View.VISIBLE
             } else {
+                heplVariable = 0
                 city = pref?.getString(code, "")!!
                 cities.isClickable = true
                 city = pref?.getString(code, "")!!
@@ -109,9 +110,11 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
         }
     }
     fun saveData(res: String) {
-        val editor = pref?.edit()
-        editor?.putString(code, city)
-        editor?.apply()
+        if (!exception) {
+            val editor = pref?.edit()
+            editor?.putString(code, city)
+            editor?.apply()
+        }
     }
     fun deleteData() {
         val editor = pref?.edit()
@@ -162,7 +165,6 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
 
     override fun onStart() {
         super.onStart()
-
     }
     fun emptySpaceClick(v: View) {
         if (v == space) {
@@ -186,7 +188,6 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
                 val valueY: Float = y2 - y1
                 if (abs(valueY) > MIN_DISTANCE) {
                     if (y2 > y1) {
-                        //multiply = false
                         weatherTask().execute()
                         checkInternet()
                         Loader.visibility = View.VISIBLE
@@ -262,7 +263,7 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
     inner class weatherTask : AsyncTask<String, Void, String>() {
         override fun onPreExecute() {
             if (!isLocationEnabled()) {
-                Toast.makeText(this@MainActivity, "Пожалуйста включите gps", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Пожалуйста, включите gps", Toast.LENGTH_SHORT).show()
             }
 
             startLocationUpdates()
@@ -321,7 +322,9 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
                         response = response3()
                     }
                 }
+                exception = false
             } catch (e: Exception) {
+                exception = true
                 response = null
             }
             return response
@@ -330,8 +333,10 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
         override fun onPostExecute(result: String?) {
             if (result == null && !switch1.isChecked && checkInternet() && isLocationEnabled()) {
                 cities.visibility = View.VISIBLE
-                if (listviewhint.visibility==View.GONE && cities.query!="")
-                Toast.makeText(this@MainActivity, "Такого города не найдено", Toast.LENGTH_SHORT).show()
+                if (listviewhint.visibility == View.GONE && cities.query != "" && heplVariable != 0)
+                    Toast.makeText(this@MainActivity, "Такого города не найдено", Toast.LENGTH_SHORT).show()
+                else if (listviewhint.visibility == View.GONE && cities.query != "" && heplVariable != 1)
+                    Toast.makeText(this@MainActivity, "Пожалуйста, введите город", Toast.LENGTH_SHORT).show()
             }
             val listview = findViewById<ListView>(R.id.listviewhint)
             val adapter: ArrayAdapter<String?> = ArrayAdapter(this@MainActivity, android.R.layout.simple_list_item_1, names)
@@ -356,13 +361,15 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
                     if (switch1.isChecked)
                         switch1.toggle()
                     city = cities.query.toString()
-                    weatherTask().execute()
+                    heplVariable = 1
+                    if (p0 != "")
+                        weatherTask().execute()
                     return false
                 }
                 override fun onQueryTextChange(p0: String?): Boolean {
-                   // multiply = false
                     listview.visibility = View.VISIBLE
-                    weatherTask().execute()
+                    if (p0 != "")
+                        weatherTask().execute()
                     listview.adapter = adapter
                     adapter.notifyDataSetChanged()
                     return false
@@ -385,9 +392,9 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
                         start.putExtra("nightTemperature", tempMin(data2))
                         start.putExtra("images", idImage(data2))
                         start.putExtra("dayTemperature", tempMax(data2))
-                        start.putExtra("result",result)
+                        start.putExtra("result", result)
                         startActivity(start)
-                        multiply=false
+                        multiply = false
                     }
                 } catch (e: Exception) {
                 }
