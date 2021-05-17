@@ -110,11 +110,9 @@ class MainActivity : AppCompatActivity(), GestureDetector.OnGestureListener, Vie
         }
     }
     fun saveData(res: String) {
-        if (!exception) {
             val editor = pref?.edit()
             editor?.putString(code, city)
             editor?.apply()
-        }
     }
     fun deleteData() {
         val editor = pref?.edit()
